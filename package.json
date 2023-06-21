@@ -1,0 +1,37 @@
+{
+	"name": "dexonline-scraper",
+	"description": "A lightweight Dexonline.ro page scraper to fetch information about words in the Romanian language.",
+
+	"license": "MIT",
+	"version": "0.1.0",
+
+	"keywords": [
+		"javascript",
+		"typescript",
+		"parser",
+		"scraper",
+		"dexonline",
+		"romanian",
+		"definitions",
+		"words",
+		"language",
+		"dictionary"
+	],
+
+	"homepage": "https://github.com/wordcollector/dexonline-scraper",
+	"bugs": {
+		"url": "https://github.com/wordcollector/dexonline-scraper/issues",
+		"email": "contact@wordcollector.co.uk"
+	},
+	"contributors": [
+		{
+			"name": "Dorian \"vxern\" Oszczęda",
+			"email": "vxern@wordcollector.co.uk",
+			"url": "https://github.com/vxern"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wordcollector/dexonline-scraper"
+	}
+}
