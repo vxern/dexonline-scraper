@@ -1,10 +1,11 @@
 {
 	"name": "dexonline-scraper",
 	"description": "A lightweight Dexonline.ro page scraper to fetch information about words in the Romanian language.",
-
 	"license": "MIT",
 	"version": "0.1.0",
-
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"type": "module",
 	"keywords": [
 		"javascript",
 		"typescript",
@@ -17,7 +18,6 @@
 		"language",
 		"dictionary"
 	],
-
 	"homepage": "https://github.com/wordcollector/dexonline-scraper",
 	"bugs": {
 		"url": "https://github.com/wordcollector/dexonline-scraper/issues",
@@ -33,5 +33,13 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/wordcollector/dexonline-scraper"
+	},
+	"scripts": {
+		"build": "tsc",
+		"start": "tsc && node dist/index.js"
+	},
+	"devDependencies": {
+		"rome": "12.1.3",
+		"typescript": "^5.1.3"
 	}
 }
