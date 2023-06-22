@@ -42,10 +42,22 @@ export function parse($: CheerioAPI, options: SearchOptionsWithWord): Inflection
 function parseHeader($: CheerioAPI, header: Cheerio<Element>): Header {
 	const section = header.children(Selectors.contentTabs.inflection.entry.table.header.element);
 
-	// rome-ignore lint/style/noNonNullAssertion: <explanation>
-	const lemmaString = section.children(Selectors.contentTabs.inflection.entry.table.header.lemma).html()!;
-	// rome-ignore lint/style/noNonNullAssertion: <explanation>
-	const [_match, lemma, _superscriptHtml, indexString] = Expressions.tableLemmaWithIndex.exec(lemmaString)!;
+	const lemmaString = section.children(Selectors.contentTabs.inflection.entry.table.header.lemma).html() ?? undefined;
+	if (lemmaString === undefined) {
+		throw "Failed to locate the lemma element in the inflection tab.";
+	}
+
+	const match = Expressions.tableLemmaWithIndex.exec(lemmaString) ?? undefined;
+	if (match === undefined) {
+		throw "Failed to match lemma string to lemma regular expression.";
+	}
+
+	const [_match, lemma, _superscriptHtml, indexString] = match as unknown as [
+		match: string,
+		lemma: string,
+		superscriptHtml: string,
+		indexString: string,
+	];
 	const index = indexString ? Number(indexString) - 1 : 0;
 
 	const tags = section
@@ -54,8 +66,7 @@ function parseHeader($: CheerioAPI, header: Cheerio<Element>): Header {
 		.map((_index, tag) => $(tag).text())
 		.toArray();
 
-	// rome-ignore lint/style/noNonNullAssertion: <explanation>
-	return { tags, lemma: lemma!, index };
+	return { tags, lemma, index };
 }
 
 function parseBody(body: Cheerio<Element>): Body {

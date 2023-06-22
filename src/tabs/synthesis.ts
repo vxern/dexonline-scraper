@@ -121,11 +121,14 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>): Tree {
 				return subtrees;
 			}
 
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			const [_match, typeName] = Expressions.treeType.exec(typeString)!;
+			const match = Expressions.treeType.exec(typeString) ?? undefined;
+			if (match === undefined) {
+				throw "Failed to match type string to tree type.";
+			}
 
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			const type = valueToEnum(TreeTypes, typeName!);
+			const [_match, typeName] = match as unknown as [match: string, typeName: string];
+
+			const type = valueToEnum(TreeTypes, typeName);
 			if (!type) {
 				return subtrees;
 			}
@@ -172,12 +175,7 @@ function getBranch<T extends TreeTypes, R extends Row.Row>($: CheerioAPI, branch
 		return { ...sharedProperties, examples, expressions } as unknown as R;
 	}
 
-	return {
-		...sharedProperties,
-		examples,
-		definitions,
-		expressions,
-	} as unknown as R;
+	return { ...sharedProperties, examples, definitions, expressions } as unknown as R;
 }
 
 function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
@@ -205,8 +203,7 @@ function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
 				.map((term) => term.trim())
 				.filter((term) => term.length !== 0);
 
-			// rome-ignore lint/style/noNonNullAssertion: <explanation>
-			relations[type!].push(...terms);
+			relations[type].push(...terms);
 
 			return relations;
 		},
