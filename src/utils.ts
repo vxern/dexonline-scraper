@@ -1,14 +1,14 @@
 /**
  * Taking two arrays, combines them so that opposing elements come in pairs.
  *
- * @param arrays - The arrays to zip.
  * @returns An array of tuples of opposing elements.
  */
-function zip<T>(...arrays: Array<Array<T>> & { length: 2 }): Array<[T, T]> {
-	// Takes the minimum of the two arrays to prevent out-of-bounds access.
-	const length = Math.min(...arrays.map((array) => array.length));
-
-	return Array.from(new Array(length)).map((_, index) => [arrays[0]![index]!, arrays[1]![index]!]);
+export function zip<T, L extends number>(a: T[] & { length: L }, b: T[] & { length: L }): [T, T][] {
+	const result: [T, T][] = [];
+	for (const index of Array(Math.min(a.length, b.length)).keys() as IterableIterator<number & L>) {
+		result.push([a[index], b[index]]);
+	}
+	return result;
 }
 
 /**
@@ -18,13 +18,11 @@ function zip<T>(...arrays: Array<Array<T>> & { length: 2 }): Array<[T, T]> {
  * @param value - The value to cast.
  * @returns The enumerator value equivalent of the cast value, or undefined if couldn't cast value.
  */
-function valueToEnum<
+export function valueToEnum<
 	EnumType extends Record<string, unknown>,
 	EnumValue = EnumType extends Record<string, infer V> ? V : never,
 >(enumerator: EnumType, value: EnumValue): EnumValue | undefined {
-	return (Object.values(enumerator) as unknown as Array<EnumValue>).includes(value)
+	return (Object.values(enumerator) as unknown as EnumValue[]).includes(value)
 		? (value as unknown as EnumValue)
 		: undefined;
 }
-
-export { valueToEnum, zip };
