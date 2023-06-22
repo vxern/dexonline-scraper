@@ -1,7 +1,5 @@
-import { Cheerio, Element } from "cheerio";
-
 /** Defines the available Dexonline content tabs. */
-enum ContentTabs {
+export enum ContentTabs {
 	/** Matches for the searched word. */
 	Lemmas = 0,
 
@@ -15,13 +13,8 @@ enum ContentTabs {
 	Articles = 3,
 }
 
-interface LemmaElement {
-	header: Cheerio<Element>;
-	body: Cheerio<Element>;
-}
-
 /** Specifies the strictness of word matching. */
-enum MatchingModes {
+export enum MatchingModes {
 	/** Consider only lemmas that match the search term exactly. */
 	Strict = 0,
 
@@ -30,7 +23,7 @@ enum MatchingModes {
 }
 
 /** Defines the available options for getting a word from the dictionary. */
-interface ParserOptions {
+export interface ParserOptions {
 	/**
 	 * Specifies the mode to use by the parser for matching results to the search term.
 	 *
@@ -51,7 +44,7 @@ interface ParserOptions {
  * If for any case there were a need to add support for this option, its bit value is __64__.
  * The preferences with bit values 16, 32 and 128 are no longer used.
  */
-enum DictionaryFlags {
+export enum DictionaryFlags {
 	/** No flags. */
 	None = 0,
 
@@ -87,6 +80,3 @@ enum DictionaryFlags {
 	 */
 	SearchOnlyNormativeDictionaries = 8,
 }
-
-export { ContentTabs, DictionaryFlags, MatchingModes };
-export type { LemmaElement, ParserOptions };

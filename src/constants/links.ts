@@ -1,1 +1,3 @@
-export const definition = (word: string): string => `https://dexonline.ro/definitie/${word}`;
+export default {
+	definition: (word: string): string => `https://dexonline.ro/definitie/${word}`,
+};
