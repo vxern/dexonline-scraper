@@ -20,23 +20,23 @@ export function parse($: CheerioAPI, options: SearchOptionsWithWord): Inflection
 
 	const entries = inflection.find(Selectors.contentTabs.inflection.entry.element).toArray();
 
-	return <InflectionTable[]>entries
-		.map<InflectionTable | undefined>((entryElement) => {
-			const tableElement = $(entryElement).children(Selectors.contentTabs.inflection.entry.table.element).first();
+	const tables: InflectionTable[] = [];
+	for (const entry of entries) {
+		const tableElement = $(entry).children(Selectors.contentTabs.inflection.entry.table.element).first();
 
-			const header = parseHeader($, tableElement);
-			if (options.mode === MatchingModes.Strict && header.lemma !== options.word) {
-				return undefined;
-			}
+		const header = parseHeader($, tableElement);
+		if (options.mode === MatchingModes.Strict && header.lemma !== options.word) {
+			continue;
+		}
 
-			const body = parseBody(tableElement);
-			if (body.table.length === 0) {
-				return undefined;
-			}
+		const body = parseBody(tableElement);
+		if (body.table.length === 0) {
+			continue;
+		}
 
-			return { ...header, ...body };
-		})
-		.filter((entryOrUndefined) => !!entryOrUndefined);
+		tables.push({ ...header, ...body });
+	}
+	return tables;
 }
 
 function parseHeader($: CheerioAPI, header: Cheerio<Element>): Header {

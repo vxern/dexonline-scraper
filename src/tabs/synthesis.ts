@@ -63,18 +63,18 @@ export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
 		synthesis.children(Selectors.contentTabs.synthesis.body.element).toArray(),
 	);
 
-	return <Lemma[]>headerBodyTuples
-		.map<Lemma | undefined>(([headerElement, bodyElement]) => {
-			const header = parseHeader($(headerElement));
-			if (options.mode === MatchingModes.Strict && header.lemma !== options.word) {
-				return undefined;
-			}
+	const lemmas = [];
+	for (const [headerElement, bodyElement] of headerBodyTuples) {
+		const header = parseHeader($(headerElement));
+		if (options.mode === MatchingModes.Strict && header.lemma !== options.word) {
+			continue;
+		}
 
-			const body = parseBody($, $(bodyElement));
+		const body = parseBody($, $(bodyElement));
 
-			return { ...header, ...body };
-		})
-		.filter((entryOrUndefined) => !!entryOrUndefined);
+		lemmas.push({ ...header, ...body });
+	}
+	return lemmas;
 }
 
 export function parseHeader(header: Cheerio<Element>): Header {
@@ -82,7 +82,7 @@ export function parseHeader(header: Cheerio<Element>): Header {
 	const type = typeElement.text().trim().toLowerCase();
 	typeElement.remove();
 
-	const [singular, _plural] = <[string, string]>header.text().trim().split(", ");
+	const [singular, _plural] = header.text().trim().split(", ") as [singular: string, plural: string];
 	const lemma = singular;
 
 	return { type, lemma };
