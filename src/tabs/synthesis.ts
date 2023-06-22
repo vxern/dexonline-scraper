@@ -115,7 +115,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 				.attr("class")
 				?.split(" ")
 				.find((className) => Expressions.treeType.test(className));
-			if (!typeString) {
+			if (typeString === undefined) {
 				return subtrees;
 			}
 
@@ -127,7 +127,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 			const [_, typeName] = match as unknown as [match: string, typeName: string];
 
 			const type = valueToEnum(TreeTypes, typeName);
-			if (!type) {
+			if (type === undefined) {
 				return subtrees;
 			}
 
@@ -213,7 +213,7 @@ function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
 
 	return groups.reduce<Relations>(
 		(relations, group) => {
-			if (!group.firstChild) {
+			if ((group.firstChild ?? undefined) === undefined) {
 				return relations;
 			}
 
@@ -221,7 +221,7 @@ function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
 			const typeString = typeElement.text().trim().toLowerCase().replace(":", "");
 
 			const type = relationTypeNameToRelationType[typeString];
-			if (!type) {
+			if (type === undefined) {
 				return relations;
 			}
 
