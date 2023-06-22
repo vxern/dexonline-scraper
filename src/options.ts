@@ -35,6 +35,17 @@ export interface ParserOptions {
 	flags: DictionaryFlags;
 }
 
+export type SearchOptionsWithWord<IsPartial extends boolean = false> = (IsPartial extends true
+	? Partial<ParserOptions>
+	: ParserOptions) &
+	(
+		| { mode: MatchingModes.Lax }
+		| {
+				mode: MatchingModes.Strict;
+				word: string;
+		  }
+	);
+
 /**
  * Bit-based flags for configuring the dictionary and the results sent back by it.
  *
