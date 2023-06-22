@@ -31,6 +31,13 @@ export interface ParserOptions {
 	 */
 	mode: MatchingModes;
 
+	/**
+	 * Specifies whether the parser should exclude copyrighted dictionaries.
+	 *
+	 * @defaultValue `true`
+	 */
+	excludeCopyrighted: boolean;
+
 	/** Configures Dexonline's response. */
 	flags: DictionaryFlags;
 }

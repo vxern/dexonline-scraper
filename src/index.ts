@@ -7,6 +7,7 @@ import { DictionaryFlags, MatchingModes, ParserOptions, SearchOptionsWithWord } 
 /** The default search options. */
 const defaultSearchOptions: ParserOptions = {
 	mode: MatchingModes.Lax,
+	excludeCopyrighted: true,
 	flags: DictionaryFlags.None,
 } as const;
 
