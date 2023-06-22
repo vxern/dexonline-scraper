@@ -7,10 +7,8 @@ interface WithMetadata<T> {
 	value: T;
 }
 
-// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface Contents extends WithMetadata<string> {}
 
-// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 export interface Row extends Contents {}
 
 export function parse($: CheerioAPI, row: Cheerio<Element>): Row {

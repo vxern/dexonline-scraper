@@ -38,7 +38,6 @@ const relationTypeNameToRelationType: Record<string, RelationTypes> = {
 
 type Relations = Record<typeof RelationTypes[keyof typeof RelationTypes], string[]>;
 
-// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface Example extends Row.Row {}
 interface Definition extends Row.Row {
 	definitions: Definition[];
@@ -51,7 +50,6 @@ interface Expression extends Row.Row {
 	expressions: Expression[];
 	relations: Relations;
 }
-// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 interface Etymology extends Row.Row {}
 
 export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
