@@ -14,20 +14,18 @@ export enum ContentTabs {
 }
 
 /** Specifies the strictness of word matching. */
-export enum MatchingModes {
+export type MatchingModes =
 	/** Consider only lemmas that match the search term exactly. */
-	Strict = 0,
-
+	| "strict"
 	/** Consider all lemmas similar to the search term. */
-	Lax = 1,
-}
+	| "lax";
 
 /** Defines the available options for getting a word from the dictionary. */
 export interface ParserOptions {
 	/**
 	 * Specifies the mode to use by the parser for matching results to the search term.
 	 *
-	 * @defaultValue `SearchModes.Lax`
+	 * @defaultValue `"lax"`
 	 */
 	mode: MatchingModes;
 
@@ -46,9 +44,9 @@ export type SearchOptionsWithWord<IsPartial extends boolean = false> = (IsPartia
 	? Partial<ParserOptions>
 	: ParserOptions) &
 	(
-		| { mode: MatchingModes.Lax }
+		| { mode: "lax" }
 		| {
-				mode: MatchingModes.Strict;
+				mode: "strict";
 				word: string;
 		  }
 	);

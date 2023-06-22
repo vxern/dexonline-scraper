@@ -1,7 +1,7 @@
 import { CheerioAPI, Cheerio, Element } from "cheerio";
 import Expressions from "../constants/expressions.js";
 import Selectors from "../constants/selectors.js";
-import { ContentTabs, MatchingModes, SearchOptionsWithWord } from "../options.js";
+import { ContentTabs, SearchOptionsWithWord } from "../options.js";
 
 export interface InflectionTable extends Header, Body {}
 
@@ -25,7 +25,7 @@ export function parse($: CheerioAPI, options: SearchOptionsWithWord): Inflection
 		const tableElement = $(entry).children(Selectors.contentTabs.inflection.entry.table.element).first();
 
 		const header = parseHeader($, tableElement);
-		if (options.mode === MatchingModes.Strict && header.lemma !== options.word) {
+		if (options.mode === "strict" && header.lemma !== options.word) {
 			continue;
 		}
 

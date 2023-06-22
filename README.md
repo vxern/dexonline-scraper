@@ -33,9 +33,7 @@ returned:
 ```ts
 import * as Dexonline from "dexonline-scraper";
 
-const results = await Dexonline.get("word", {
-  mode: Dexonline.MatchingModes.Strict,
-});
+const results = await Dexonline.get("word", { mode: "strict" });
 ```
 
 You can modify the results returned by Dexonline using flags:
