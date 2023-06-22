@@ -82,7 +82,7 @@ export function parseHeader(header: Cheerio<Element>): Header {
 	const type = typeElement.text().trim().toLowerCase();
 	typeElement.remove();
 
-	const [singular, _plural] = header.text().trim().split(", ") as [singular: string, plural: string];
+	const [singular, _] = header.text().trim().split(", ") as [singular: string, plural: string];
 	const lemma = singular;
 
 	return { type, lemma };
@@ -124,7 +124,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>): Tree {
 				throw "Failed to match type string to tree type.";
 			}
 
-			const [_match, typeName] = match as unknown as [match: string, typeName: string];
+			const [_, typeName] = match as unknown as [match: string, typeName: string];
 
 			const type = valueToEnum(TreeTypes, typeName);
 			if (!type) {
@@ -215,5 +215,5 @@ function getEtymology($: CheerioAPI, body: Cheerio<Element>): Etymology[] {
 	const entries = section.children(Selectors.contentTabs.synthesis.body.etymology.tree).children();
 	const rows = entries.children(Selectors.contentTabs.synthesis.body.row.element);
 
-	return rows.map((_index, row) => Row.parse($, $(row))).toArray();
+	return rows.map((_, row) => Row.parse($, $(row))).toArray();
 }

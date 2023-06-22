@@ -23,13 +23,13 @@ function getContents($: CheerioAPI, row: Cheerio<Element>): Contents {
 	const tags = section
 		.children(Selectors.contentTabs.synthesis.body.row.contents.tags)
 		.children()
-		.map((_index, tag) => $(tag).text())
+		.map((_, tag) => $(tag).text())
 		.toArray();
 	const text = section.children(Selectors.contentTabs.synthesis.body.row.contents.text).text().trim();
 	const sources = section
 		.children(Selectors.contentTabs.synthesis.body.row.contents.sources)
 		.children()
-		.map((_index, tag) => $(tag).text().trim())
+		.map((_, tag) => $(tag).text().trim())
 		.toArray();
 
 	return { tags, value: text, sources };

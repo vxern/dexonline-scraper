@@ -52,7 +52,7 @@ function parseHeader($: CheerioAPI, header: Cheerio<Element>): Header {
 		throw "Failed to match lemma string to lemma regular expression.";
 	}
 
-	const [_match, lemma, _superscriptHtml, indexString] = match as unknown as [
+	const [_, lemma, __, indexString] = match as unknown as [
 		match: string,
 		lemma: string,
 		superscriptHtml: string,
@@ -63,7 +63,7 @@ function parseHeader($: CheerioAPI, header: Cheerio<Element>): Header {
 	const tags = section
 		.children(Selectors.contentTabs.inflection.entry.table.header.tag)
 		.children()
-		.map((_index, tag) => $(tag).text())
+		.map((_, tag) => $(tag).text())
 		.toArray();
 
 	return { tags, lemma, index };
