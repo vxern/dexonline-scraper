@@ -25,8 +25,8 @@ type SearchOptionsWithWord<IsPartial extends boolean = false> = (IsPartial exten
 // rome-ignore lint/style/noNamespace: <explanation>
 namespace Dexonline {
 	export interface Results {
-		synthesis: Array<Synthesis.Lemma>;
-		inflection: Array<Inflection.InflectionTable>;
+		synthesis: Synthesis.Lemma[];
+		inflection: Inflection.InflectionTable[];
 	}
 
 	export async function get(
@@ -78,18 +78,18 @@ namespace Synthesis {
 	}
 
 	interface Tree {
-		examples: Array<Example>;
-		definitions: Array<Definition>;
-		expressions: Array<Expression>;
+		examples: Example[];
+		definitions: Definition[];
+		expressions: Expression[];
 	}
 
 	interface Body extends Tree {
-		etymology: Array<Etymology>;
+		etymology: Etymology[];
 	}
 
 	interface WithMetadata<T> {
-		tags: Array<string>;
-		sources: Array<string>;
+		tags: string[];
+		sources: string[];
 		value: T;
 	}
 
@@ -140,25 +140,25 @@ namespace Synthesis {
 		augmentative: RelationTypes.Augmentative,
 	};
 
-	type Relations = Record<typeof RelationTypes[keyof typeof RelationTypes], Array<string>>;
+	type Relations = Record<typeof RelationTypes[keyof typeof RelationTypes], string[]>;
 
 	// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 	interface Example extends Row.Row {}
 	interface Definition extends Row.Row {
-		definitions: Array<Definition>;
-		examples: Array<Example>;
-		expressions: Array<Expression>;
+		definitions: Definition[];
+		examples: Example[];
+		expressions: Expression[];
 		relations: Relations;
 	}
 	interface Expression extends Row.Row {
-		examples: Array<Example>;
-		expressions: Array<Expression>;
+		examples: Example[];
+		expressions: Expression[];
 		relations: Relations;
 	}
 	// rome-ignore lint/suspicious/noEmptyInterface: <explanation>
 	interface Etymology extends Row.Row {}
 
-	export function parse($: CheerioAPI, options: SearchOptionsWithWord): Array<Lemma> {
+	export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
 		const synthesis = $(Selectors.contentTab(ContentTabs.Synthesis));
 
 		const headerBodyTuples = zip(
@@ -169,7 +169,7 @@ namespace Synthesis {
 			synthesis.children(Selectors.contentTabs.synthesis.body.element).toArray(),
 		);
 
-		return <Array<Lemma>>headerBodyTuples
+		return <Lemma[]>headerBodyTuples
 			.map<Lemma | undefined>(([headerElement, bodyElement]) => {
 				const header = parseHeader($(headerElement));
 				if (options.mode === MatchingModes.Strict && header.lemma !== options.word) {
@@ -215,20 +215,24 @@ namespace Synthesis {
 			return { examples: [], definitions: [], expressions: [] };
 		}
 
-		const subtreesSorted = subtrees.reduce<Record<keyof Tree, Array<Element>>>(
+		const subtreesSorted = subtrees.reduce<Record<keyof Tree, Element[]>>(
 			(subtrees, subtree) => {
 				const typeString = $(subtree)
 					.attr("class")
 					?.split(" ")
 					.find((className) => Expressions.treeType.test(className));
-				if (!typeString) return subtrees;
+				if (!typeString) {
+					return subtrees;
+				}
 
 				// rome-ignore lint/style/noNonNullAssertion: <explanation>
 				const [_match, typeName] = Expressions.treeType.exec(typeString)!;
 
 				// rome-ignore lint/style/noNonNullAssertion: <explanation>
 				const type = valueToEnum(TreeTypes, typeName!);
-				if (!type) return subtrees;
+				if (!type) {
+					return subtrees;
+				}
 
 				switch (type) {
 					case TreeTypes.Example: {
@@ -286,13 +290,17 @@ namespace Synthesis {
 
 		return groups.reduce<Relations>(
 			(relations, group) => {
-				if (!group.firstChild) return relations;
+				if (!group.firstChild) {
+					return relations;
+				}
 
 				const typeElement = $(group).children().first().remove();
 				const typeString = typeElement.text().trim().toLowerCase().replace(":", "");
 
 				const type = relationTypeNameToRelationType[typeString];
-				if (!type) return relations;
+				if (!type) {
+					return relations;
+				}
 
 				const terms = $(group)
 					.children()
@@ -310,7 +318,7 @@ namespace Synthesis {
 		);
 	}
 
-	function getEtymology($: CheerioAPI, body: Cheerio<Element>): Array<Etymology> {
+	function getEtymology($: CheerioAPI, body: Cheerio<Element>): Etymology[] {
 		const section = body.children(Selectors.contentTabs.synthesis.body.etymology.element);
 
 		const entries = section.children(Selectors.contentTabs.synthesis.body.etymology.tree).children();
@@ -325,21 +333,21 @@ namespace Inflection {
 	export interface InflectionTable extends Header, Body {}
 
 	interface Header {
-		tags: Array<string>;
+		tags: string[];
 		index: number;
 		lemma: string;
 	}
 
 	interface Body {
-		table: Array<Array<string>>;
+		table: string[][];
 	}
 
-	export function parse($: CheerioAPI, options: SearchOptionsWithWord): Array<InflectionTable> {
+	export function parse($: CheerioAPI, options: SearchOptionsWithWord): InflectionTable[] {
 		const inflection = $(Selectors.contentTab(ContentTabs.Inflection));
 
 		const entries = inflection.find(Selectors.contentTabs.inflection.entry.element).toArray();
 
-		return <Array<InflectionTable>>entries
+		return <InflectionTable[]>entries
 			.map<InflectionTable | undefined>((entryElement) => {
 				const tableElement = $(entryElement).children(Selectors.contentTabs.inflection.entry.table.element).first();
 
@@ -349,7 +357,9 @@ namespace Inflection {
 				}
 
 				const body = parseBody(tableElement);
-				if (body.table.length === 0) return undefined;
+				if (body.table.length === 0) {
+					return undefined;
+				}
 
 				return { ...header, ...body };
 			})
