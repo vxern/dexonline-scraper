@@ -36,8 +36,8 @@
 	},
 	"scripts": {
 		"build": "tsc",
-		"start": "tsc && node dist/index.js",
-		"test": "mocha --no-warnings"
+		"test": "mocha --no-warnings",
+		"publish": "tsc && npm publish"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.5",

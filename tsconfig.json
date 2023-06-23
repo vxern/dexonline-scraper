@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Node",
     "target": "ESNext",
-    "outDir": "dist",
+    "outDir": "dist/",
     "declaration": true,
-    "declarationDir": "dist",
+    "declarationDir": "dist/",
 		"allowJs": true,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
@@ -26,5 +26,6 @@
 		"suppressImplicitAnyIndexErrors": false
 	},
   "compileOnSave": true,
-  "include": ["src"]
+  "exclude": ["dist/", "node_modules/", "test/"],
+  "include": ["src/"]
 }
