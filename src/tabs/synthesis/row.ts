@@ -35,7 +35,7 @@ function getContents(
 		.map((_, tag) => $(tag).text().trim())
 		.toArray();
 	if (excludeCopyrighted) {
-		const isCopyrighted = sources.some((source) => !copyrightedDictionaries.includes(source));
+		const isCopyrighted = sources.every((source) => copyrightedDictionaries.includes(source));
 		// If every source is copyrighted, reject the entry.
 		if (isCopyrighted) {
 			return undefined;

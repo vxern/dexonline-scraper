@@ -1,4 +1,4 @@
-import { load } from "cheerio";
+import * as cheerio from "cheerio";
 import Links from "./constants/links.js";
 import * as Inflection from "./tabs/inflection.js";
 import * as Synthesis from "./tabs/synthesis.js";
@@ -57,7 +57,7 @@ export function parse(
 	contents: string,
 	options: SearchOptionsWithWord<true> = { ...defaultSearchOptions, word: "" },
 ): Results {
-	const $ = load(contents);
+	const $ = cheerio.load(contents);
 
 	const optionsFilled: SearchOptionsWithWord<false> = {
 		...defaultSearchOptions,
@@ -70,5 +70,5 @@ export function parse(
 	return { synthesis, inflection };
 }
 
-export { DictionaryFlags, MatchingModes, Synthesis };
+export { DictionaryFlags, MatchingModes, Synthesis, Links };
 export type { ParserOptions };

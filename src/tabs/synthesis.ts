@@ -170,7 +170,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 	}
 
 	const expressions: Expression[] = [];
-	for (const expressionElement of subtreesSorted.definitions) {
+	for (const expressionElement of subtreesSorted.expressions) {
 		const expression: Expression | undefined = getBranch($, $(expressionElement), "expression", options);
 		if (expression === undefined) {
 			continue;
