@@ -40,12 +40,13 @@ You can modify the results returned by Dexonline using flags:
 
 ```ts
 import * as Dexonline from 'dexonline-scraper';
+import { DictionaryFlags } from 'dexonline-scraper';
 
 const results = await Dexonline.get('word', {
   flags: 
-    | Dexonline.DictionaryFlags.UseCedillas // Use 'ş' and 'ţ' instead of 'ș' and 'ț'.
-    | Dexonline.DictionaryFlags.MatchDiacritics // Do not return words where the only difference is a diacritic.
-    | Dexonline.DictionaryFlags.UsePreReformOrthography // Use 'î' instead of 'â' in all cases except for the word 'român' and its derivatives.
-    | Dexonline.DictionaryFlags.SearchOnlyNormativeDictionaries // Return results obtained only from the DEX and/or the DOOM.
+    | DictionaryFlags.UseCedillas // Use 'ş' and 'ţ' instead of 'ș' and 'ț'.
+    | DictionaryFlags.MatchDiacritics // Do not return words where the only difference is a diacritic.
+    | DictionaryFlags.UsePreReformOrthography // Use 'î' instead of 'â' in all cases except for the word 'român' and its derivatives.
+    | DictionaryFlags.SearchOnlyNormativeDictionaries // Return results obtained only from the DEX and/or the DOOM.
 });
 ```
