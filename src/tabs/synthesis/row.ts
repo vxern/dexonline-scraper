@@ -1,4 +1,4 @@
-import { CheerioAPI, Cheerio, Element } from "cheerio";
+import { Cheerio, CheerioAPI, Element } from "cheerio";
 import copyrightedDictionaries from "../../constants/copyright.js";
 import Selectors from "../../constants/selectors.js";
 import { ParserOptions } from "../../options.js";

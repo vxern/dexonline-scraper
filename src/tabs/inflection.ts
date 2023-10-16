@@ -1,4 +1,4 @@
-import { CheerioAPI, Cheerio, Element } from "cheerio";
+import { Cheerio, CheerioAPI, Element } from "cheerio";
 import Expressions from "../constants/expressions.js";
 import Selectors from "../constants/selectors.js";
 import { ContentTabs, SearchOptionsWithWord } from "../options.js";

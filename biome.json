@@ -1,11 +1,16 @@
 {
-	"$schema": "https://docs.rome.tools/schemas/12.1.3/schema.json",
 	"linter": {
 		"enabled": true,
 		"rules": {
       "all": true,
       "suspicious": {
         "noEmptyInterface": "off"
+      },
+      "nursery": {
+        "useImportRestrictions": "off"
+      },
+      "style": {
+        "useNamingConvention": "off"
       }
 		}
 	},

@@ -22,7 +22,7 @@ interface Body extends Tree {
 	etymology: Etymology[];
 }
 
-type RelationTypes = "synonym" | "antonym" | "diminutive" | "augmentative";
+export type RelationTypes = "synonym" | "antonym" | "diminutive" | "augmentative";
 
 const relationTypeNameToRelationType: Record<string, RelationTypes> = {
 	sinonime: "synonym",
@@ -31,21 +31,21 @@ const relationTypeNameToRelationType: Record<string, RelationTypes> = {
 	augmentative: "augmentative",
 };
 
-type Relations = Record<`${RelationTypes}s`, string[]>;
+export type Relations = Record<`${RelationTypes}s`, string[]>;
 
-interface Example extends Row.Row {}
-interface Definition extends Row.Row {
+export interface Example extends Row.Row {}
+export interface Definition extends Row.Row {
 	definitions: Definition[];
 	examples: Example[];
 	expressions: Expression[];
 	relations: Relations;
 }
-interface Expression extends Row.Row {
+export interface Expression extends Row.Row {
 	examples: Example[];
 	expressions: Expression[];
 	relations: Relations;
 }
-interface Etymology extends Row.Row {}
+export interface Etymology extends Row.Row {}
 
 export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
 	const synthesis = $(Selectors.contentTab(ContentTabs.Synthesis));

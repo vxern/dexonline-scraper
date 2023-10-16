@@ -1,8 +1,8 @@
 import * as cheerio from "cheerio";
 import Links from "./constants/links.js";
+import { DictionaryFlags, MatchingModes, ParserOptions, SearchOptionsWithWord } from "./options.js";
 import * as Inflection from "./tabs/inflection.js";
 import * as Synthesis from "./tabs/synthesis.js";
-import { DictionaryFlags, MatchingModes, ParserOptions, SearchOptionsWithWord } from "./options.js";
 
 /** The default search options. */
 const defaultSearchOptions: ParserOptions = {
@@ -70,5 +70,7 @@ export function parse(
 	return { synthesis, inflection };
 }
 
-export { DictionaryFlags, MatchingModes, Synthesis, Links };
+export * from "./tabs/inflection.js";
+export * from "./tabs/synthesis.js";
+export { DictionaryFlags, MatchingModes, Synthesis, Inflection, Links };
 export type { ParserOptions };
