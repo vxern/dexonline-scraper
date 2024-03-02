@@ -17,8 +17,7 @@ const results = await Dexonline.get("word");
 ```
 
 Alternatively, you can parse HTML of the website directly, bypassing the fetch
-step as follows. Notice that, as opposed to `get()`, `parse()` is synchronous as
-opposed to:
+step as follows. Notice that, as opposed to `get()`, `parse()` is synchronous:
 
 ```ts
 import * as Dexonline from "dexonline-scraper";
