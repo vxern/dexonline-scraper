@@ -1,7 +1,15 @@
+## 0.1.2
+
+- Bumped dependency versions in `package.json`, added an explicit import for `ts-node`.
+- Bumped the year in the `LICENCE` copyright notice to 2024.
+- Added a contributing guide in `CONTRIBUTING.md`.
+- Added `jsr.json` for publishing to JSR.
+- Updated `biome.json`.
+
 ## 0.1.1
 
-- Switch from `rome` to `biome`.
-- Add missing exports.
+- Switched from `rome` to `biome`.
+- Added missing exports.
 
 ## 0.1.0
 

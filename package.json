@@ -2,10 +2,10 @@
 	"name": "dexonline-scraper",
 	"description": "A lightweight Dexonline.ro page scraper to fetch information about words in the Romanian language.",
 	"license": "MIT",
-	"version": "0.1.1",
+	"version": "0.1.2",
+	"type": "module",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"type": "module",
 	"keywords": [
 		"javascript",
 		"typescript",
@@ -35,21 +35,23 @@
 		"url": "https://github.com/vxern/dexonline-scraper"
 	},
 	"scripts": {
+		"setup": "npm install && npm audit fix",
+		"format": "biome check src/ --apply-unsafe --organize-imports-enabled true",
 		"build": "tsc",
 		"test": "mocha --no-warnings",
-		"format": "biome check src/ --apply-unsafe",
-		"publish": "tsc && npm publish"
+		"publish": "npm run build && npm publish"
 	},
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.12"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.2.2",
-		"@types/chai": "^4.3.8",
-		"@types/mocha": "^10.0.2",
-		"@types/node": "^20.8.6",
-		"chai": "^4.3.10",
-		"mocha": "^10.2.0",
-		"typescript": "^5.2.2"
+		"@biomejs/biome": "1.5.3",
+		"@types/chai": "^4.3.12",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "^20.11.24",
+		"chai": "^5.1.0",
+		"mocha": "^10.3.0",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.3.3"
 	}
 }

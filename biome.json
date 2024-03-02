@@ -3,21 +3,22 @@
 		"enabled": true,
 		"rules": {
       "all": true,
-      "suspicious": {
-        "noEmptyInterface": "off"
-      },
       "nursery": {
         "useImportRestrictions": "off"
       },
       "style": {
-        "useNamingConvention": "off"
+        "useNamingConvention": "off",
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noEmptyInterface": "off"
       }
 		}
 	},
   "formatter": {
     "enabled": true,
     "formatWithErrors": true,
-    "indentSize": 2,
+    "indentWidth": 2,
     "indentStyle": "tab",
     "lineWidth": 120
   }
