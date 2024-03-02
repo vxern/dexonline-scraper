@@ -65,13 +65,11 @@ export function parse(
 		...options,
 	};
 
-	const synthesis = Synthesis.parse($, optionsFilled);
+	const synthesis = Synthesis.scrape($, optionsFilled);
 	const inflection = Inflection.scrape($, optionsFilled);
 
 	return { synthesis, inflection };
 }
 
-export * from "./tabs/inflection.js";
-export * from "./tabs/synthesis.js";
 export { DictionaryFlags, MatchingModes, Synthesis, Inflection, Links };
 export type { ParserOptions };

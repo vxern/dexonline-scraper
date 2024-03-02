@@ -24,30 +24,30 @@ interface Body extends Tree {
 
 export type RelationTypes = "synonym" | "antonym" | "diminutive" | "augmentative";
 
-const relationTypeNameToRelationType: Record<string, RelationTypes> = {
+const relationTypeNameToRelationType = Object.freeze({
 	sinonime: "synonym",
 	antonime: "antonym",
 	diminutive: "diminutive",
 	augmentative: "augmentative",
-};
+} as const satisfies Record<string, RelationTypes>);
 
 export type Relations = Record<`${RelationTypes}s`, string[]>;
 
 export interface Example extends Row.Row {}
 export interface Definition extends Row.Row {
-	definitions: Definition[];
-	examples: Example[];
-	expressions: Expression[];
-	relations: Relations;
+	readonly definitions: Definition[];
+	readonly examples: Example[];
+	readonly expressions: Expression[];
+	readonly relations: Relations;
 }
 export interface Expression extends Row.Row {
-	examples: Example[];
-	expressions: Expression[];
-	relations: Relations;
+	readonly examples: Example[];
+	readonly expressions: Expression[];
+	readonly relations: Relations;
 }
 export interface Etymology extends Row.Row {}
 
-export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
+export function scrape($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
 	const synthesis = $(Selectors.contentTab(ContentTabs.Synthesis));
 
 	const headerBodyTuples = zip(
@@ -60,19 +60,19 @@ export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
 
 	const lemmas = [];
 	for (const [headerElement, bodyElement] of headerBodyTuples) {
-		const header = parseHeader($(headerElement));
+		const header = scrapeHeader($(headerElement));
 		if (options.mode === "strict" && header.lemma !== options.word) {
 			continue;
 		}
 
-		const body = parseBody($, $(bodyElement), options);
+		const body = scrapeBody($, $(bodyElement), options);
 
 		lemmas.push({ ...header, ...body });
 	}
 	return lemmas;
 }
 
-export function parseHeader(header: Cheerio<Element>): Header {
+export function scrapeHeader(header: Cheerio<Element>): Header {
 	const typeElement = header.children(Selectors.contentTabs.synthesis.header.type);
 	const type = typeElement.text().trim().toLowerCase();
 	typeElement.remove();
@@ -83,17 +83,17 @@ export function parseHeader(header: Cheerio<Element>): Header {
 	return { type, lemma };
 }
 
-export function parseBody($: CheerioAPI, body: Cheerio<Element>, options: ParserOptions): Body {
-	const { examples, definitions, expressions } = getTree($, body, options);
-	const etymology = getEtymology($, body, options);
+export function scrapeBody($: CheerioAPI, $body: Cheerio<Element>, options: ParserOptions): Body {
+	const { examples, definitions, expressions } = scrapeTree($, $body, options);
+	const etymology = scrapeEtymology($, $body, options);
 
 	return { examples, definitions, expressions, etymology };
 }
 
 type TreeTypes = "example" | "definition" | "expression";
 
-export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOptions): Tree {
-	const section = body.children(Selectors.contentTabs.synthesis.body.tree.element);
+export function scrapeTree($: CheerioAPI, $body: Cheerio<Element>, options: ParserOptions): Tree {
+	const section = $body.children(Selectors.contentTabs.synthesis.body.tree.element);
 	const subtrees = section.children().toArray();
 
 	if (subtrees.length === 0) {
@@ -153,7 +153,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 
 	const examples: Example[] = [];
 	for (const exampleElement of subtreesSorted.examples) {
-		const example: Example | undefined = getBranch($, $(exampleElement), "example", options);
+		const example: Example | undefined = scrapeBranch($, $(exampleElement), "example", options);
 		if (example === undefined) {
 			continue;
 		}
@@ -162,7 +162,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 
 	const definitions: Definition[] = [];
 	for (const definitionElement of subtreesSorted.definitions) {
-		const definition: Definition | undefined = getBranch($, $(definitionElement), "definition", options);
+		const definition: Definition | undefined = scrapeBranch($, $(definitionElement), "definition", options);
 		if (definition === undefined) {
 			continue;
 		}
@@ -171,7 +171,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 
 	const expressions: Expression[] = [];
 	for (const expressionElement of subtreesSorted.expressions) {
-		const expression: Expression | undefined = getBranch($, $(expressionElement), "expression", options);
+		const expression: Expression | undefined = scrapeBranch($, $(expressionElement), "expression", options);
 		if (expression === undefined) {
 			continue;
 		}
@@ -181,13 +181,13 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 	return { examples, definitions, expressions };
 }
 
-function getBranch<T extends TreeTypes, R extends Row.Row>(
+function scrapeBranch<T extends TreeTypes, R extends Row.Row>(
 	$: CheerioAPI,
-	branch: Cheerio<Element>,
+	$branch: Cheerio<Element>,
 	type: T,
 	options: ParserOptions,
 ): R | undefined {
-	const root = $(branch.children(Selectors.contentTabs.synthesis.body.row.element));
+	const root = $($branch.children(Selectors.contentTabs.synthesis.body.row.element));
 	const row = Row.parse($, root, options);
 	if (row === undefined) {
 		return undefined;
@@ -197,8 +197,8 @@ function getBranch<T extends TreeTypes, R extends Row.Row>(
 		return row as R;
 	}
 
-	const sharedProperties = { ...row, relations: getRelations($, root) };
-	const { examples, definitions, expressions } = getTree($, branch, options);
+	const sharedProperties = { ...row, relations: scrapeRelations($, root) };
+	const { examples, definitions, expressions } = scrapeTree($, $branch, options);
 
 	if (type === "expression") {
 		return { ...sharedProperties, examples, expressions } as unknown as R;
@@ -207,8 +207,8 @@ function getBranch<T extends TreeTypes, R extends Row.Row>(
 	return { ...sharedProperties, examples, definitions, expressions } as unknown as R;
 }
 
-function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
-	const section = row.children(Selectors.contentTabs.synthesis.body.row.relations.element);
+function scrapeRelations($: CheerioAPI, $row: Cheerio<Element>): Relations {
+	const section = $row.children(Selectors.contentTabs.synthesis.body.row.relations.element);
 	const groups = section.children().toArray();
 
 	return groups.reduce<Relations>(
@@ -220,7 +220,7 @@ function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
 			const typeElement = $(group).children().first().remove();
 			const typeString = typeElement.text().trim().toLowerCase().replace(":", "");
 
-			const type = relationTypeNameToRelationType[typeString];
+			const type = relationTypeNameToRelationType[typeString as keyof typeof relationTypeNameToRelationType];
 			if (type === undefined) {
 				return relations;
 			}
@@ -240,8 +240,8 @@ function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
 	);
 }
 
-function getEtymology($: CheerioAPI, body: Cheerio<Element>, options: ParserOptions): Etymology[] {
-	const section = body.children(Selectors.contentTabs.synthesis.body.etymology.element);
+function scrapeEtymology($: CheerioAPI, $body: Cheerio<Element>, options: ParserOptions): Etymology[] {
+	const section = $body.children(Selectors.contentTabs.synthesis.body.etymology.element);
 
 	const entries = section.children(Selectors.contentTabs.synthesis.body.etymology.tree).children();
 	const rows = entries.children(Selectors.contentTabs.synthesis.body.row.element);
