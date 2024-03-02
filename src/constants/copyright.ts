@@ -1,7 +1,7 @@
 /**
  * @remarks
  * This is a list of dictionary identifiers that are under copyright, and cannot be queried without explicit permission.
- * 
+ *
  * `dexonline-scraper` filters entries out from them by default, however this can be overriden in the case of
  * having obtained explicit permission for a given dictionary.
  */

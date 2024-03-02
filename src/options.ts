@@ -40,16 +40,16 @@ export interface ParserOptions {
 	readonly flags: DictionaryFlags;
 }
 
-export type SearchOptionsWithWord<IsPartial extends boolean = false> = Readonly<(IsPartial extends true
-	? Partial<ParserOptions>
-	: ParserOptions) &
-	(
-		| { mode: "lax"; word?: string; }
-		| {
-				mode: "strict";
-				word: string;
-		  }
-	)>;
+export type SearchOptionsWithWord<IsPartial extends boolean = false> = Readonly<
+	(IsPartial extends true ? Partial<ParserOptions> : ParserOptions) &
+		(
+			| { mode: "lax"; word?: string }
+			| {
+					mode: "strict";
+					word: string;
+			  }
+		)
+>;
 
 /**
  * Bit-based flags for configuring the dictionary and the results sent back by it.

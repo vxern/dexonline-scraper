@@ -8,24 +8,24 @@ export interface InflectionModel extends Heading, Table {}
 
 /** Represents the heading of a Dexonline inflection model. */
 interface Heading {
-  /** The tags for a given inflection model. */
+	/** The tags for a given inflection model. */
 	readonly tags: string[];
-  /** The index of the inflection model as shown on the webpage. */
+	/** The index of the inflection model as shown on the webpage. */
 	readonly index: number;
-  /** The lemma this inflection model applies to */
+	/** The lemma this inflection model applies to */
 	readonly lemma: string;
 }
 
 /** Represents the body (table) of a Dexonline inflection model. */
 interface Table {
-  /** The HTML table represented as a 2D array of rows and columns. */
+	/** The HTML table represented as a 2D array of rows and columns. */
 	readonly table: string[][];
 }
 
 /**
  * Given a {@link $|Cheerio document handle} and additional {@link options} for scraping entries, scrapes the
  * inflection models on the page.
- * 
+ *
  * @param $ - A Cheerio document handle for the webpage.
  * @param options - Options for the scraper.
  * @returns An array of the scraped {@link InflectionModel}s.
@@ -56,7 +56,7 @@ export function scrape($: CheerioAPI, options: SearchOptionsWithWord): Inflectio
 
 /**
  * Given a {@link $|Cheerio document handle} for the inflection model on the webpage, scrapes its heading.
- * 
+ *
  * @param $ - A Cheerio document handle for the webpage.
  * @param $heading - A Cheerio document handle for the heading of the inflection model.
  * @returns The scraped inflection model {@link Heading}.
@@ -93,7 +93,7 @@ function scrapeHeading($: CheerioAPI, $heading: Cheerio<Element>): Heading {
 
 /**
  * Given a {@link $|Cheerio document handle} for the inflection model on the webpage, scrapes its table.
- * 
+ *
  * @param $ - A Cheerio document handle for the webpage.
  * @param $heading - A Cheerio document handle for the table of the inflection model.
  * @returns The scraped inflection model {@link Table}.
@@ -183,7 +183,7 @@ function scrapeTable($: CheerioAPI, body: Cheerio<Element>): Table {
 /**
  * Given a {@link $|Cheerio document handle} for a cell inside the table for an inflection model, gets the
  * contents of the cell.
- * 
+ *
  * @param $ - A Cheerio document handle for the webpage.
  * @param $heading - A Cheerio document handle for the cell element.
  * @returns The scraped contents of the cell.

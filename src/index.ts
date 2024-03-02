@@ -10,7 +10,10 @@ const defaultSearchOptions = Object.freeze({
 	excludeCopyrighted: true,
 	flags: DictionaryFlags.None,
 } as const satisfies ParserOptions);
-const defaultSearchOptionsWithWord = Object.freeze({ ...defaultSearchOptions, word: "" } as const satisfies SearchOptionsWithWord);
+const defaultSearchOptionsWithWord = Object.freeze({
+	...defaultSearchOptions,
+	word: "",
+} as const satisfies SearchOptionsWithWord);
 
 export interface Results {
 	readonly synthesis: Synthesis.Lemma[];
@@ -54,10 +57,7 @@ export async function get(
  * @param options - Options for searching.
  * @returns A {@link Results} object or {@link undefined} if unable to parse.
  */
-export function parse(
-	contents: string,
-	options: SearchOptionsWithWord<true> = defaultSearchOptionsWithWord,
-): Results {
+export function parse(contents: string, options: SearchOptionsWithWord<true> = defaultSearchOptionsWithWord): Results {
 	const $ = cheerio.load(contents);
 
 	const optionsFilled: SearchOptionsWithWord<false> = {
