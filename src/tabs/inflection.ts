@@ -3,7 +3,7 @@ import Expressions from "../constants/expressions.js";
 import Selectors from "../constants/selectors.js";
 import { ContentTabs, SearchOptionsWithWord } from "../options.js";
 
-/** Represents a table of inflections as parsed directly from the tables on Dexonline. */
+/** Represents an inflection model as scraped directly from the models on Dexonline. */
 export interface InflectionModel extends Heading, Table {}
 
 /** Represents the heading of a Dexonline inflection model. */
