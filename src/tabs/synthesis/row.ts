@@ -3,16 +3,25 @@ import copyrightedDictionaries from "../../constants/copyright.js";
 import Selectors from "../../constants/selectors.js";
 import { ParserOptions } from "../../options.js";
 
-interface WithMetadata<T> {
+/** The contents of a row. */
+interface Contents {
 	readonly tags: string[];
 	readonly sources: string[];
-	readonly value: T;
+	readonly value: string;
 }
 
-interface Contents extends WithMetadata<string> {}
-
+/** Represents a row of text in a dictionary entry, be it a definition, expression, example, etc. */
 export interface Row extends Contents {}
 
+/**
+ * Given a {@link $|Cheerio document handle}, a {@link $row} in a dictionary entry, and additional {@link options},
+ * scrapes the {@link Row|row} and returns it.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param $row - A Cheerio document handle for a row in a dictionary entry.
+ * @param options - Options for the scraper.
+ * @returns The scraped {@link Row|row}, or {@link undefined} if unsuccessful.
+ */
 export function scrape($: CheerioAPI, $row: Cheerio<Element>, options: ParserOptions): Row | undefined {
 	const contents = scrapeContents($, $row, options);
 	if (contents === undefined) {
@@ -22,6 +31,15 @@ export function scrape($: CheerioAPI, $row: Cheerio<Element>, options: ParserOpt
 	return contents;
 }
 
+/**
+ * Given a {@link $|Cheerio document handle}, a {@link $row} in a dictionary entry, and additional {@link options},
+ * scrapes the {@link Contents|contents} of the row and returns them.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param $row - A Cheerio document handle for a row in a dictionary entry.
+ * @param options - Options for the scraper.
+ * @returns The scraped {@link Contents|contents} of the row, or {@link undefined} if unsuccessful.
+ */
 function scrapeContents(
 	$: CheerioAPI,
 	$row: Cheerio<Element>,
