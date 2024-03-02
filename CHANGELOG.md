@@ -1,3 +1,11 @@
+## 0.2.0 (Work in progress)
+
+- Document all API members, export them as well.
+- Use better naming:
+  - Rename "inflection table" to "inflection model"
+    - Rename "header" and "body" to "heading" and "table" for inflection models.
+- Make returned objects read-only.
+
 ## 0.1.2
 
 - Bumped dependency versions in `package.json`, added an explicit import for `ts-node`.
