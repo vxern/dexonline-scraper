@@ -1,4 +1,4 @@
-## 0.2.0 (Work in progress)
+## 0.2.0
 
 - Document all API members, export them as well.
 - Use better naming:
