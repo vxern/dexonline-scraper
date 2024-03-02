@@ -13,7 +13,7 @@ const defaultSearchOptions: ParserOptions = {
 
 export interface Results {
 	synthesis: Synthesis.Lemma[];
-	inflection: Inflection.InflectionTable[];
+	inflection: Inflection.InflectionModel[];
 }
 
 /**
@@ -65,7 +65,7 @@ export function parse(
 	};
 
 	const synthesis = Synthesis.parse($, optionsFilled);
-	const inflection = Inflection.parse($, optionsFilled);
+	const inflection = Inflection.scrape($, optionsFilled);
 
 	return { synthesis, inflection };
 }

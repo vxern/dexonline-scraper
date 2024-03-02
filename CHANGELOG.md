@@ -2,8 +2,9 @@
 
 - Document all API members, export them as well.
 - Use better naming:
-  - Rename "inflection table" to "inflection model"
+  - Rename "inflection table" to "inflection model".
     - Rename "header" and "body" to "heading" and "table" for inflection models.
+  - Use "scrape" instead of "parse". 
 - Make returned objects read-only.
 
 ## 0.1.2
