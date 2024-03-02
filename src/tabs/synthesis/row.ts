@@ -4,9 +4,9 @@ import Selectors from "../../constants/selectors.js";
 import { ParserOptions } from "../../options.js";
 
 interface WithMetadata<T> {
-	tags: string[];
-	sources: string[];
-	value: T;
+	readonly tags: string[];
+	readonly sources: string[];
+	readonly value: T;
 }
 
 interface Contents extends WithMetadata<string> {}
@@ -19,7 +19,7 @@ export function parse($: CheerioAPI, row: Cheerio<Element>, options: ParserOptio
 		return undefined;
 	}
 
-	return { ...contents };
+	return contents;
 }
 
 function getContents(

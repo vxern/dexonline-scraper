@@ -8,18 +8,18 @@ import * as Row from "./synthesis/row.js";
 export interface Lemma extends Header, Body {}
 
 interface Header {
-	type: string;
-	lemma: string;
+	readonly type: string;
+	readonly lemma: string;
 }
 
 interface Tree {
-	examples: Example[];
-	definitions: Definition[];
-	expressions: Expression[];
+	readonly examples: Example[];
+	readonly definitions: Definition[];
+	readonly expressions: Expression[];
 }
 
 interface Body extends Tree {
-	etymology: Etymology[];
+	readonly etymology: Etymology[];
 }
 
 export type RelationTypes = "synonym" | "antonym" | "diminutive" | "augmentative";

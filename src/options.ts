@@ -27,29 +27,29 @@ export interface ParserOptions {
 	 *
 	 * @defaultValue `"lax"`
 	 */
-	mode: MatchingModes;
+	readonly mode: MatchingModes;
 
 	/**
 	 * Specifies whether the parser should exclude copyrighted dictionaries.
 	 *
 	 * @defaultValue `true`
 	 */
-	excludeCopyrighted: boolean;
+	readonly excludeCopyrighted: boolean;
 
 	/** Configures Dexonline's response. */
-	flags: DictionaryFlags;
+	readonly flags: DictionaryFlags;
 }
 
-export type SearchOptionsWithWord<IsPartial extends boolean = false> = (IsPartial extends true
+export type SearchOptionsWithWord<IsPartial extends boolean = false> = Readonly<(IsPartial extends true
 	? Partial<ParserOptions>
 	: ParserOptions) &
 	(
-		| { mode: "lax" }
+		| { mode: "lax"; word?: string; }
 		| {
 				mode: "strict";
 				word: string;
 		  }
-	);
+	)>;
 
 /**
  * Bit-based flags for configuring the dictionary and the results sent back by it.

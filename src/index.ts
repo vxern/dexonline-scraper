@@ -5,19 +5,20 @@ import * as Inflection from "./tabs/inflection.js";
 import * as Synthesis from "./tabs/synthesis.js";
 
 /** The default search options. */
-const defaultSearchOptions: ParserOptions = {
+const defaultSearchOptions = Object.freeze({
 	mode: "lax",
 	excludeCopyrighted: true,
 	flags: DictionaryFlags.None,
-} as const;
+} as const satisfies ParserOptions);
+const defaultSearchOptionsWithWord = Object.freeze({ ...defaultSearchOptions, word: "" } as const satisfies SearchOptionsWithWord);
 
 export interface Results {
-	synthesis: Synthesis.Lemma[];
-	inflection: Inflection.InflectionModel[];
+	readonly synthesis: Synthesis.Lemma[];
+	readonly inflection: Inflection.InflectionModel[];
 }
 
 /**
- * Taking a {@link word} and (optionally) a set of {@link ParseOptions}, searches
+ * Taking a {@link word} and (optionally) a set of {@link ParserOptions}, searches
  * for the word on dexonline, returning a {@link Results} object or {@link undefined}
  * if not found.
  *
@@ -55,7 +56,7 @@ export async function get(
  */
 export function parse(
 	contents: string,
-	options: SearchOptionsWithWord<true> = { ...defaultSearchOptions, word: "" },
+	options: SearchOptionsWithWord<true> = defaultSearchOptionsWithWord,
 ): Results {
 	const $ = cheerio.load(contents);
 
