@@ -23,12 +23,12 @@ interface Table {
 }
 
 /**
- * Given a {@link $|Cheerio document handle} and additional {@link options} for scraping entries, scrapes the
- * inflection models on the page.
+ * Given a {@link $|Cheerio document handle} and additional {@link options} for scraping entries, scrapes the inflection
+ * models on the page.
  *
  * @param $ - A Cheerio document handle for the webpage.
  * @param options - Options for the scraper.
- * @returns An array of the scraped {@link InflectionModel}s.
+ * @returns An array of the scraped {@link InflectionModel|inflection models}.
  */
 export function scrape($: CheerioAPI, options: SearchOptionsWithWord): InflectionModel[] {
 	const inflection = $(Selectors.contentTab(ContentTabs.Inflection));
@@ -55,7 +55,8 @@ export function scrape($: CheerioAPI, options: SearchOptionsWithWord): Inflectio
 }
 
 /**
- * Given a {@link $|Cheerio document handle} for the inflection model on the webpage, scrapes its heading.
+ * Given a {@link $|Cheerio document handle} and the {@link $heading} for the inflection model on the webpage, scrapes
+ * its heading.
  *
  * @param $ - A Cheerio document handle for the webpage.
  * @param $heading - A Cheerio document handle for the heading of the inflection model.
@@ -92,14 +93,15 @@ function scrapeHeading($: CheerioAPI, $heading: Cheerio<Element>): Heading {
 }
 
 /**
- * Given a {@link $|Cheerio document handle} for the inflection model on the webpage, scrapes its table.
+ * Given a {@link $|Cheerio document handle} and the {@link $body} for the inflection model on the webpage, scrapes
+ * its table.
  *
  * @param $ - A Cheerio document handle for the webpage.
- * @param $heading - A Cheerio document handle for the table of the inflection model.
+ * @param $body - A Cheerio document handle for the table of the inflection model.
  * @returns The scraped inflection model {@link Table}.
  */
-function scrapeTable($: CheerioAPI, body: Cheerio<Element>): Table {
-	const section = body.children(Selectors.contentTabs.inflection.entry.table.body.element);
+function scrapeTable($: CheerioAPI, $body: Cheerio<Element>): Table {
+	const section = $body.children(Selectors.contentTabs.inflection.entry.table.body.element);
 
 	// Certain words are listed in the inflection tab but do not show up with a table.
 	if (section.length === 0) {
@@ -181,11 +183,11 @@ function scrapeTable($: CheerioAPI, body: Cheerio<Element>): Table {
 }
 
 /**
- * Given a {@link $|Cheerio document handle} for a cell inside the table for an inflection model, gets the
+ * Given a {@link $|Cheerio document handle} and the {@link $cell} inside the table for an inflection model, scrapes the
  * contents of the cell.
  *
  * @param $ - A Cheerio document handle for the webpage.
- * @param $heading - A Cheerio document handle for the cell element.
+ * @param $cell - A Cheerio document handle for the cell element.
  * @returns The scraped contents of the cell.
  */
 function scrapeCellContents($: CheerioAPI, $cell: Cheerio<Element>): string {

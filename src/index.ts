@@ -10,13 +10,16 @@ const defaultSearchOptions = Object.freeze({
 	excludeCopyrighted: true,
 	flags: DictionaryFlags.None,
 } as const satisfies ParserOptions);
+
+/** The default search options with a pre-filled value for the `word` property. */
 const defaultSearchOptionsWithWord = Object.freeze({
 	...defaultSearchOptions,
 	word: "",
 } as const satisfies SearchOptionsWithWord);
 
+/** Represents the results of a word search using `dexonline-scraper`. */
 export interface Results {
-	readonly synthesis: Synthesis.Lemma[];
+	readonly synthesis: Synthesis.DictionaryEntry[];
 	readonly inflection: Inflection.InflectionModel[];
 }
 

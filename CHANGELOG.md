@@ -2,6 +2,7 @@
 
 - Document all API members, export them as well.
 - Use better naming:
+  - Rename "lemma" to "dictionary entry".
   - Rename "inflection table" to "inflection model".
     - Rename "header" and "body" to "heading" and "table" for inflection models.
   - Use "scrape" instead of "parse". 
