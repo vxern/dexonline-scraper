@@ -40,7 +40,7 @@ export function scrape($: CheerioAPI, $row: Cheerio<Element>, options: ParserOpt
  * @param options - Options for the scraper.
  * @returns The scraped {@link Contents|contents} of the row, or {@link undefined} if unsuccessful.
  */
-function scrapeContents(
+export function scrapeContents(
 	$: CheerioAPI,
 	$row: Cheerio<Element>,
 	{ excludeCopyrighted }: ParserOptions,

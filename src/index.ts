@@ -1,5 +1,8 @@
 import * as cheerio from "cheerio";
+import copyrightedDictionaries from "./constants/copyright.js";
+import Expressions from "./constants/expressions.js";
 import Links from "./constants/links.js";
+import Selectors from "./constants/selectors.js";
 import { DictionaryFlags, MatchingModes, ParserOptions, SearchOptionsWithWord } from "./options.js";
 import * as Inflection from "./tabs/inflection.js";
 import * as Synthesis from "./tabs/synthesis.js";
@@ -74,5 +77,14 @@ export function parse(contents: string, options: SearchOptionsWithWord<true> = d
 	return { synthesis, inflection };
 }
 
-export { DictionaryFlags, MatchingModes, Synthesis, Inflection, Links };
+export {
+	DictionaryFlags,
+	MatchingModes,
+	Synthesis,
+	Inflection,
+	Links,
+	Expressions,
+	Selectors,
+	copyrightedDictionaries,
+};
 export type { ParserOptions };

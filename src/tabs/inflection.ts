@@ -62,7 +62,7 @@ export function scrape($: CheerioAPI, options: SearchOptionsWithWord): Inflectio
  * @param $heading - A Cheerio document handle for the heading of the inflection model.
  * @returns The scraped inflection model {@link Heading}.
  */
-function scrapeHeading($: CheerioAPI, $heading: Cheerio<Element>): Heading {
+export function scrapeHeading($: CheerioAPI, $heading: Cheerio<Element>): Heading {
 	const section = $heading.children(Selectors.contentTabs.inflection.entry.table.header.element);
 
 	const lemmaString = section.children(Selectors.contentTabs.inflection.entry.table.header.lemma).html() ?? undefined;
@@ -100,7 +100,7 @@ function scrapeHeading($: CheerioAPI, $heading: Cheerio<Element>): Heading {
  * @param $body - A Cheerio document handle for the table of the inflection model.
  * @returns The scraped inflection model {@link Table}.
  */
-function scrapeTable($: CheerioAPI, $body: Cheerio<Element>): Table {
+export function scrapeTable($: CheerioAPI, $body: Cheerio<Element>): Table {
 	const section = $body.children(Selectors.contentTabs.inflection.entry.table.body.element);
 
 	// Certain words are listed in the inflection tab but do not show up with a table.
@@ -190,7 +190,7 @@ function scrapeTable($: CheerioAPI, $body: Cheerio<Element>): Table {
  * @param $cell - A Cheerio document handle for the cell element.
  * @returns The scraped contents of the cell.
  */
-function scrapeCellContents($: CheerioAPI, $cell: Cheerio<Element>): string {
+export function scrapeCellContents($: CheerioAPI, $cell: Cheerio<Element>): string {
 	const listElements = $cell
 		.children("ul")
 		.children("li")

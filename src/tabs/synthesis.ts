@@ -10,9 +10,9 @@ export interface DictionaryEntry extends Header, Body {}
 
 /** Represents the body of a Dexonline dictionary entry. */
 interface Header {
-  /** The lemma's type; part of speech; word class. */
+	/** The lemma's type; part of speech; word class. */
 	readonly type: string;
-  /** The lemma this dictionary entry is for. */
+	/** The lemma this dictionary entry is for. */
 	readonly lemma: string;
 }
 
@@ -21,17 +21,17 @@ export type TreeType = "example" | "definition" | "expression";
 
 /** Represents a "tree", a group of sections in a dictionary entry. */
 export interface Tree {
-  /** A list of examples provided for the given lemma. */
+	/** A list of examples provided for the given lemma. */
 	readonly examples: Example[];
-  /** A list of definitions provided for the given lemma. */
+	/** A list of definitions provided for the given lemma. */
 	readonly definitions: Definition[];
-  /** A list of expressions provided for the given lemma. */
+	/** A list of expressions provided for the given lemma. */
 	readonly expressions: Expression[];
 }
 
 /** Represents the body of a Dexonline dictionary entry. */
 interface Body extends Tree {
-  /** A list of etymologies provided for the dictionary entry. */
+	/** A list of etymologies provided for the dictionary entry. */
 	readonly etymology: Etymology[];
 }
 
@@ -48,11 +48,11 @@ export type RelationType = "synonym" | "antonym" | "diminutive" | "augmentative"
 
 /** An object containing the relations between a given lemma and other lemmas. */
 export interface Relations {
-  readonly synonyms: string[];
-  readonly antonyms: string[];
-  readonly diminutives: string[];
-  readonly augmentatives: string[];
-};
+	readonly synonyms: string[];
+	readonly antonyms: string[];
+	readonly diminutives: string[];
+	readonly augmentatives: string[];
+}
 
 /** A row containing an example featuring a given lemma. */
 export interface Example extends Row.Row {}
@@ -249,7 +249,7 @@ export function scrapeTree($: CheerioAPI, $tree: Cheerio<Element>, options: Pars
  * @param options - Options for the scraper.
  * @returns The scraped {@link R|row}.
  */
-function scrapeBranch<T extends TreeType, R extends Row.Row>(
+export function scrapeBranch<T extends TreeType, R extends Row.Row>(
 	$: CheerioAPI,
 	$branch: Cheerio<Element>,
 	type: T,
@@ -282,7 +282,7 @@ function scrapeBranch<T extends TreeType, R extends Row.Row>(
  * @param $row - A Cheerio document handle for the row in a dictionary entry.
  * @returns The scraped {@link Relations} section.
  */
-function scrapeRelations($: CheerioAPI, $row: Cheerio<Element>): Relations {
+export function scrapeRelations($: CheerioAPI, $row: Cheerio<Element>): Relations {
 	const section = $row.children(Selectors.contentTabs.synthesis.body.row.relations.element);
 	const groups = section.children().toArray();
 
@@ -322,7 +322,7 @@ function scrapeRelations($: CheerioAPI, $row: Cheerio<Element>): Relations {
  * @param $body - A Cheerio document handle for the dictionary entry body.
  * @returns The scraped {@link Etymology} section.
  */
-function scrapeEtymology($: CheerioAPI, $body: Cheerio<Element>, options: ParserOptions): Etymology[] {
+export function scrapeEtymology($: CheerioAPI, $body: Cheerio<Element>, options: ParserOptions): Etymology[] {
 	const section = $body.children(Selectors.contentTabs.synthesis.body.etymology.element);
 
 	const entries = section.children(Selectors.contentTabs.synthesis.body.etymology.tree).children();
