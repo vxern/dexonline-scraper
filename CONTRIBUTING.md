@@ -16,7 +16,7 @@ npm run setup
 
 Afterwards, just to ensure the setup ran smoothly and the repository is ready to go, run the test suite:
 ```
-npm run test
+npm test
 ```
 
 > Optional: If you are contributing to the original project, feel free to skip this step.

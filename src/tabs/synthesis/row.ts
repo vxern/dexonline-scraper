@@ -5,8 +5,11 @@ import { ParserOptions } from "../../options.js";
 
 /** The contents of a row. */
 interface Contents {
+	/** A list of tags or "labels" placed found beside a row. */
 	readonly tags: string[];
+	/** A list of sources (dictionaries) for where a dictionary entry was sourced from. */
 	readonly sources: string[];
+	/** The text in the row. */
 	readonly value: string;
 }
 

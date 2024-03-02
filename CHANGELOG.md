@@ -1,3 +1,8 @@
+## 0.2.1
+
+- Add documentation for the remaining, undocumented API members.
+- Rename `MatchingModes` to `MatchingMode` as a union type.
+
 ## 0.2.0
 
 - Document all API members, export them as well.

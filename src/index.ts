@@ -3,8 +3,17 @@ import copyrightedDictionaries from "./constants/copyright.js";
 import Expressions from "./constants/expressions.js";
 import Links from "./constants/links.js";
 import Selectors from "./constants/selectors.js";
-import { DictionaryFlags, MatchingModes, ParserOptions, SearchOptionsWithWord } from "./options.js";
+import { DictionaryFlags, MatchingMode, ParserOptions, SearchOptionsWithWord } from "./options.js";
+
+/**
+ * A namespace containing functions to scrape inflection models from the inflection ("conjugări / declinări")
+ * tab on Dexonline.
+ */
 import * as Inflection from "./tabs/inflection.js";
+
+/**
+ * A namespace containing functions to scrape dictionary entries from the synthesis ("sinteză") tab on Dexonline.
+ */
 import * as Synthesis from "./tabs/synthesis.js";
 
 /** The default search options. */
@@ -22,7 +31,9 @@ const defaultSearchOptionsWithWord = Object.freeze({
 
 /** Represents the results of a word search using `dexonline-scraper`. */
 export interface Results {
+	/** A list of results from the synthesis tab. */
 	readonly synthesis: Synthesis.DictionaryEntry[];
+	/** A list of results from the inflection tab. */
 	readonly inflection: Inflection.InflectionModel[];
 }
 
@@ -77,14 +88,5 @@ export function parse(contents: string, options: SearchOptionsWithWord<true> = d
 	return { synthesis, inflection };
 }
 
-export {
-	DictionaryFlags,
-	MatchingModes,
-	Synthesis,
-	Inflection,
-	Links,
-	Expressions,
-	Selectors,
-	copyrightedDictionaries,
-};
+export { DictionaryFlags, MatchingMode, Synthesis, Inflection, Links, Expressions, Selectors, copyrightedDictionaries };
 export type { ParserOptions };

@@ -14,7 +14,7 @@ export enum ContentTabs {
 }
 
 /** Specifies the strictness of word matching. */
-export type MatchingModes =
+export type MatchingMode =
 	/** Consider only lemmas that match the search term exactly. */
 	| "strict"
 	/** Consider all lemmas similar to the search term. */
@@ -27,7 +27,7 @@ export interface ParserOptions {
 	 *
 	 * @defaultValue `"lax"`
 	 */
-	readonly mode: MatchingModes;
+	readonly mode: MatchingMode;
 
 	/**
 	 * Specifies whether the parser should exclude copyrighted dictionaries.

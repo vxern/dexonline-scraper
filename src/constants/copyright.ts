@@ -1,11 +1,4 @@
-/**
- * @remarks
- * This is a list of dictionary identifiers that are under copyright, and cannot be queried without explicit permission.
- *
- * `dexonline-scraper` filters entries out from them by default, however this can be overriden in the case of
- * having obtained explicit permission for a given dictionary.
- */
-export default Object.freeze([
+const _copyright = [
 	"Petro-Sedim",
 	"Legislație",
 	"DLR",
@@ -65,4 +58,14 @@ export default Object.freeze([
 	"DAN",
 	"Șăineanu, ed. I",
 	"DASLR",
-] satisfies string[]);
+];
+
+/**
+ * This is a list of dictionary identifiers that are under copyright, and cannot be queried without explicit permission.
+ *
+ * `dexonline-scraper` filters entries out from them by default, however this can be overriden in the case of
+ * having obtained explicit permission for a given dictionary.
+ */
+const copyright: readonly string[] = Object.freeze(_copyright);
+
+export default copyright;

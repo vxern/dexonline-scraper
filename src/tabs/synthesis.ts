@@ -48,9 +48,13 @@ export type RelationType = "synonym" | "antonym" | "diminutive" | "augmentative"
 
 /** An object containing the relations between a given lemma and other lemmas. */
 export interface Relations {
+	/** A list of synonyms of the given lemma. */
 	readonly synonyms: string[];
+	/** A list of antonyms of the given lemma. */
 	readonly antonyms: string[];
+	/** A list of diminutive forms of the given lemma. */
 	readonly diminutives: string[];
+	/** A list of augmentative forms of the given lemma. */
 	readonly augmentatives: string[];
 }
 
@@ -59,16 +63,23 @@ export interface Example extends Row.Row {}
 
 /** A row containing a definition for a given lemma. */
 export interface Definition extends Row.Row {
+	/** A list of sub-definitions. */
 	readonly definitions: Definition[];
+	/** A list of examples for this definition. */
 	readonly examples: Example[];
+	/** A list of expressions for this definition. */
 	readonly expressions: Expression[];
+	/** A list of relations between the given lemma and other lemmas for this definition. */
 	readonly relations: Relations;
 }
 
 /** A row containing an expression featuring a given lemma. */
 export interface Expression extends Row.Row {
+	/** A list of examples for this expression. */
 	readonly examples: Example[];
+	/** A list of sub-expressions for this expression. */
 	readonly expressions: Expression[];
+	/** A list of relations between the given lemma and other lemmas for this expression. */
 	readonly relations: Relations;
 }
 

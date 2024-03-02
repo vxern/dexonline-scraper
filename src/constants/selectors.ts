@@ -1,6 +1,6 @@
 import { ContentTabs } from "../options.js";
 
-export default Object.freeze({
+const _selectors = {
 	contentTab: (tab: ContentTabs): string => `#tab_${tab}`,
 	contentTabs: {
 		synthesis: {
@@ -51,4 +51,12 @@ export default Object.freeze({
 			},
 		},
 	},
-} as const);
+} as const;
+
+/**
+ * This is a collection of DOM selectors used internally by `dexonline-scraper` for locating different elements
+ * during scraping of dictionary entries.
+ */
+const selectors: typeof _selectors = Object.freeze(_selectors);
+
+export default selectors;
