@@ -13,8 +13,8 @@ interface Contents extends WithMetadata<string> {}
 
 export interface Row extends Contents {}
 
-export function parse($: CheerioAPI, row: Cheerio<Element>, options: ParserOptions): Row | undefined {
-	const contents = getContents($, row, options);
+export function scrape($: CheerioAPI, $row: Cheerio<Element>, options: ParserOptions): Row | undefined {
+	const contents = scrapeContents($, $row, options);
 	if (contents === undefined) {
 		return undefined;
 	}
@@ -22,12 +22,12 @@ export function parse($: CheerioAPI, row: Cheerio<Element>, options: ParserOptio
 	return contents;
 }
 
-function getContents(
+function scrapeContents(
 	$: CheerioAPI,
-	row: Cheerio<Element>,
+	$row: Cheerio<Element>,
 	{ excludeCopyrighted }: ParserOptions,
 ): Contents | undefined {
-	const section = row.children(Selectors.contentTabs.synthesis.body.row.contents.element);
+	const section = $row.children(Selectors.contentTabs.synthesis.body.row.contents.element);
 
 	const sources = section
 		.children(Selectors.contentTabs.synthesis.body.row.contents.sources)

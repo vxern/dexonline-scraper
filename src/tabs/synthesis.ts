@@ -188,7 +188,7 @@ function scrapeBranch<T extends TreeTypes, R extends Row.Row>(
 	options: ParserOptions,
 ): R | undefined {
 	const root = $($branch.children(Selectors.contentTabs.synthesis.body.row.element));
-	const row = Row.parse($, root, options);
+	const row = Row.scrape($, root, options);
 	if (row === undefined) {
 		return undefined;
 	}
@@ -248,7 +248,7 @@ function scrapeEtymology($: CheerioAPI, $body: Cheerio<Element>, options: Parser
 
 	const etymologies: Etymology[] = [];
 	for (const row of rows) {
-		const etymology = Row.parse($, $(row), options);
+		const etymology = Row.scrape($, $(row), options);
 		if (etymology === undefined) {
 			continue;
 		}
