@@ -12,6 +12,9 @@
       },
       "suspicious": {
         "noEmptyInterface": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off"
       }
 		}
 	},

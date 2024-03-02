@@ -5,49 +5,85 @@ import { ContentTabs, ParserOptions, SearchOptionsWithWord } from "../options.js
 import { zip } from "../utils.js";
 import * as Row from "./synthesis/row.js";
 
-export interface Lemma extends Header, Body {}
+/** Represents a dictionary entry as scraped directly from the entries on Dexonline. */
+export interface DictionaryEntry extends Header, Body {}
 
+/** Represents the body of a Dexonline dictionary entry. */
 interface Header {
-	type: string;
-	lemma: string;
+	/** The lemma's type; part of speech; word class. */
+	readonly type: string;
+	/** The lemma this dictionary entry is for. */
+	readonly lemma: string;
 }
 
-interface Tree {
-	examples: Example[];
-	definitions: Definition[];
-	expressions: Expression[];
+/** Represents the type of "tree", a group of sections in a dictionary entry. */
+export type TreeType = "example" | "definition" | "expression";
+
+/** Represents a "tree", a group of sections in a dictionary entry. */
+export interface Tree {
+	/** A list of examples provided for the given lemma. */
+	readonly examples: Example[];
+	/** A list of definitions provided for the given lemma. */
+	readonly definitions: Definition[];
+	/** A list of expressions provided for the given lemma. */
+	readonly expressions: Expression[];
 }
 
+/** Represents the body of a Dexonline dictionary entry. */
 interface Body extends Tree {
-	etymology: Etymology[];
+	/** A list of etymologies provided for the dictionary entry. */
+	readonly etymology: Etymology[];
 }
 
-export type RelationTypes = "synonym" | "antonym" | "diminutive" | "augmentative";
-
-const relationTypeNameToRelationType: Record<string, RelationTypes> = {
+/** An internal object mapping the names of Dexonline relations to their English counterparts. */
+const _relationTypeNameToRelationType = Object.freeze({
 	sinonime: "synonym",
 	antonime: "antonym",
 	diminutive: "diminutive",
 	augmentative: "augmentative",
-};
+} as const satisfies Record<string, RelationType>);
 
-export type Relations = Record<`${RelationTypes}s`, string[]>;
+/** Represents the type of relation between a given lemma and other lemmas. */
+export type RelationType = "synonym" | "antonym" | "diminutive" | "augmentative";
 
+/** An object containing the relations between a given lemma and other lemmas. */
+export interface Relations {
+	readonly synonyms: string[];
+	readonly antonyms: string[];
+	readonly diminutives: string[];
+	readonly augmentatives: string[];
+}
+
+/** A row containing an example featuring a given lemma. */
 export interface Example extends Row.Row {}
+
+/** A row containing a definition for a given lemma. */
 export interface Definition extends Row.Row {
-	definitions: Definition[];
-	examples: Example[];
-	expressions: Expression[];
-	relations: Relations;
+	readonly definitions: Definition[];
+	readonly examples: Example[];
+	readonly expressions: Expression[];
+	readonly relations: Relations;
 }
+
+/** A row containing an expression featuring a given lemma. */
 export interface Expression extends Row.Row {
-	examples: Example[];
-	expressions: Expression[];
-	relations: Relations;
+	readonly examples: Example[];
+	readonly expressions: Expression[];
+	readonly relations: Relations;
 }
+
+/** A row containing the etymology of a given lemma. */
 export interface Etymology extends Row.Row {}
 
-export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
+/**
+ * Given a {@link $|Cheerio document handle} and additional {@link options} for scraping entries, scrapes the dictionary
+ * entries on the page.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param options - Options for the scraper.
+ * @returns An array of the scraped {@link DictionaryEntry|dictionary entries}.
+ */
+export function scrape($: CheerioAPI, options: SearchOptionsWithWord): DictionaryEntry[] {
 	const synthesis = $(Selectors.contentTab(ContentTabs.Synthesis));
 
 	const headerBodyTuples = zip(
@@ -58,42 +94,64 @@ export function parse($: CheerioAPI, options: SearchOptionsWithWord): Lemma[] {
 		synthesis.children(Selectors.contentTabs.synthesis.body.element).toArray(),
 	);
 
-	const lemmas = [];
+	const entries = [];
 	for (const [headerElement, bodyElement] of headerBodyTuples) {
-		const header = parseHeader($(headerElement));
+		const header = scrapeHeader($(headerElement));
 		if (options.mode === "strict" && header.lemma !== options.word) {
 			continue;
 		}
 
-		const body = parseBody($, $(bodyElement), options);
+		const body = scrapeBody($, $(bodyElement), options);
 
-		lemmas.push({ ...header, ...body });
+		entries.push({ ...header, ...body });
 	}
-	return lemmas;
+	return entries;
 }
 
-export function parseHeader(header: Cheerio<Element>): Header {
-	const typeElement = header.children(Selectors.contentTabs.synthesis.header.type);
+/**
+ * Given the {@link $header} of a dictionary entry, scrapes it and returns it.
+ *
+ * @param $header - A Cheerio document handle for the header of a dictionary entry.
+ * @returns The scraped dictionary entry {@link Header|header}.
+ */
+export function scrapeHeader($header: Cheerio<Element>): Header {
+	const typeElement = $header.children(Selectors.contentTabs.synthesis.header.type);
 	const type = typeElement.text().trim().toLowerCase();
 	typeElement.remove();
 
-	const [singular, _] = header.text().trim().split(", ") as [singular: string, plural: string];
+	const [singular, _] = $header.text().trim().split(", ") as [singular: string, plural: string];
 	const lemma = singular;
 
 	return { type, lemma };
 }
 
-export function parseBody($: CheerioAPI, body: Cheerio<Element>, options: ParserOptions): Body {
-	const { examples, definitions, expressions } = getTree($, body, options);
-	const etymology = getEtymology($, body, options);
+/**
+ * Given a {@link $|Cheerio document handle}, the {@link $body} of a dictionary entry, and additional {@link options},
+ * scrapes it and returns it.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param $body - A Cheerio document handle for the body of a dictionary entry.
+ * @param options - Options for the scraper.
+ * @returns The scraped dictionary entry {@link Body|body}.
+ */
+export function scrapeBody($: CheerioAPI, $body: Cheerio<Element>, options: ParserOptions): Body {
+	const { examples, definitions, expressions } = scrapeTree($, $body, options);
+	const etymology = scrapeEtymology($, $body, options);
 
 	return { examples, definitions, expressions, etymology };
 }
 
-type TreeTypes = "example" | "definition" | "expression";
-
-export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOptions): Tree {
-	const section = body.children(Selectors.contentTabs.synthesis.body.tree.element);
+/**
+ * Given a {@link $|Cheerio document handle}, a {@link $tree} (chunk of a dictionary entry or the dictionary entry itself),
+ * and additional {@link options}, scrapes the {@link Tree|tree}, returning it.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param $tree - A Cheerio document handle for the tree.
+ * @param options - Options for the scraper.
+ * @returns The scraped {@link Tree|tree}.
+ */
+export function scrapeTree($: CheerioAPI, $tree: Cheerio<Element>, options: ParserOptions): Tree {
+	const section = $tree.children(Selectors.contentTabs.synthesis.body.tree.element);
 	const subtrees = section.children().toArray();
 
 	if (subtrees.length === 0) {
@@ -116,7 +174,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 			}
 
 			const [_, typeName] = match as unknown as [match: string, typeName: string];
-			const type = ((): TreeTypes | undefined => {
+			const type = ((): TreeType | undefined => {
 				if (typeName === "example" || typeName === "expression") {
 					return typeName;
 				}
@@ -153,7 +211,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 
 	const examples: Example[] = [];
 	for (const exampleElement of subtreesSorted.examples) {
-		const example: Example | undefined = getBranch($, $(exampleElement), "example", options);
+		const example: Example | undefined = scrapeBranch($, $(exampleElement), "example", options);
 		if (example === undefined) {
 			continue;
 		}
@@ -162,7 +220,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 
 	const definitions: Definition[] = [];
 	for (const definitionElement of subtreesSorted.definitions) {
-		const definition: Definition | undefined = getBranch($, $(definitionElement), "definition", options);
+		const definition: Definition | undefined = scrapeBranch($, $(definitionElement), "definition", options);
 		if (definition === undefined) {
 			continue;
 		}
@@ -171,7 +229,7 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 
 	const expressions: Expression[] = [];
 	for (const expressionElement of subtreesSorted.expressions) {
-		const expression: Expression | undefined = getBranch($, $(expressionElement), "expression", options);
+		const expression: Expression | undefined = scrapeBranch($, $(expressionElement), "expression", options);
 		if (expression === undefined) {
 			continue;
 		}
@@ -181,14 +239,24 @@ export function getTree($: CheerioAPI, body: Cheerio<Element>, options: ParserOp
 	return { examples, definitions, expressions };
 }
 
-function getBranch<T extends TreeTypes, R extends Row.Row>(
+/**
+ * Given a {@link $|Cheerio document handle}, a {@link $branch} in a dictionary entry, the {@link type} of the branch,
+ * and additional {@link options}, scrapes the branch, returning a {@link R|row representation} of it.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param $branch - A Cheerio document handle for the branch of a dictionary entry.
+ * @param type - The {@link type|TreeTypes} of the branch.
+ * @param options - Options for the scraper.
+ * @returns The scraped {@link R|row}.
+ */
+export function scrapeBranch<T extends TreeType, R extends Row.Row>(
 	$: CheerioAPI,
-	branch: Cheerio<Element>,
+	$branch: Cheerio<Element>,
 	type: T,
 	options: ParserOptions,
 ): R | undefined {
-	const root = $(branch.children(Selectors.contentTabs.synthesis.body.row.element));
-	const row = Row.parse($, root, options);
+	const root = $($branch.children(Selectors.contentTabs.synthesis.body.row.element));
+	const row = Row.scrape($, root, options);
 	if (row === undefined) {
 		return undefined;
 	}
@@ -197,8 +265,8 @@ function getBranch<T extends TreeTypes, R extends Row.Row>(
 		return row as R;
 	}
 
-	const sharedProperties = { ...row, relations: getRelations($, root) };
-	const { examples, definitions, expressions } = getTree($, branch, options);
+	const sharedProperties = { ...row, relations: scrapeRelations($, root) };
+	const { examples, definitions, expressions } = scrapeTree($, $branch, options);
 
 	if (type === "expression") {
 		return { ...sharedProperties, examples, expressions } as unknown as R;
@@ -207,8 +275,15 @@ function getBranch<T extends TreeTypes, R extends Row.Row>(
 	return { ...sharedProperties, examples, definitions, expressions } as unknown as R;
 }
 
-function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
-	const section = row.children(Selectors.contentTabs.synthesis.body.row.relations.element);
+/**
+ * Given a {@link $|Cheerio document handle} and a {@link $row} in a dictionary entry, scrapes the relations section.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param $row - A Cheerio document handle for the row in a dictionary entry.
+ * @returns The scraped {@link Relations} section.
+ */
+export function scrapeRelations($: CheerioAPI, $row: Cheerio<Element>): Relations {
+	const section = $row.children(Selectors.contentTabs.synthesis.body.row.relations.element);
 	const groups = section.children().toArray();
 
 	return groups.reduce<Relations>(
@@ -220,7 +295,7 @@ function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
 			const typeElement = $(group).children().first().remove();
 			const typeString = typeElement.text().trim().toLowerCase().replace(":", "");
 
-			const type = relationTypeNameToRelationType[typeString];
+			const type = _relationTypeNameToRelationType[typeString as keyof typeof _relationTypeNameToRelationType];
 			if (type === undefined) {
 				return relations;
 			}
@@ -240,15 +315,22 @@ function getRelations($: CheerioAPI, row: Cheerio<Element>): Relations {
 	);
 }
 
-function getEtymology($: CheerioAPI, body: Cheerio<Element>, options: ParserOptions): Etymology[] {
-	const section = body.children(Selectors.contentTabs.synthesis.body.etymology.element);
+/**
+ * Given a {@link $|Cheerio document handle} and the {@link $body} for a dictionary entry, scrapes the etymology section.
+ *
+ * @param $ - A Cheerio document handle for the webpage.
+ * @param $body - A Cheerio document handle for the dictionary entry body.
+ * @returns The scraped {@link Etymology} section.
+ */
+export function scrapeEtymology($: CheerioAPI, $body: Cheerio<Element>, options: ParserOptions): Etymology[] {
+	const section = $body.children(Selectors.contentTabs.synthesis.body.etymology.element);
 
 	const entries = section.children(Selectors.contentTabs.synthesis.body.etymology.tree).children();
 	const rows = entries.children(Selectors.contentTabs.synthesis.body.row.element);
 
 	const etymologies: Etymology[] = [];
 	for (const row of rows) {
-		const etymology = Row.parse($, $(row), options);
+		const etymology = Row.scrape($, $(row), options);
 		if (etymology === undefined) {
 			continue;
 		}

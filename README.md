@@ -1,4 +1,4 @@
-## A lightweight Dexonline.ro page scraper to fetch information about words in the Romanian language.
+## A tiny, battle-tested, performant and documented scraper for dexonline.ro.
 
 ### Usage
 

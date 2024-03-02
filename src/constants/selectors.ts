@@ -1,6 +1,6 @@
 import { ContentTabs } from "../options.js";
 
-export default {
+export default Object.freeze({
 	contentTab: (tab: ContentTabs): string => `#tab_${tab}`,
 	contentTabs: {
 		synthesis: {
@@ -41,7 +41,7 @@ export default {
 						element: "div",
 						lemma: "span[class=lexemeName]",
 						// There is indeed a trailing whitespace here.
-						// Do not ask me why: I don't know.
+						// Do not ask me why for I do not know.
 						tag: 'span[class="tag "]',
 					},
 					body: {
@@ -51,4 +51,4 @@ export default {
 			},
 		},
 	},
-};
+} as const);

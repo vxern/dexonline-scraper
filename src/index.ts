@@ -1,23 +1,33 @@
 import * as cheerio from "cheerio";
+import copyrightedDictionaries from "./constants/copyright.js";
+import Expressions from "./constants/expressions.js";
 import Links from "./constants/links.js";
+import Selectors from "./constants/selectors.js";
 import { DictionaryFlags, MatchingModes, ParserOptions, SearchOptionsWithWord } from "./options.js";
 import * as Inflection from "./tabs/inflection.js";
 import * as Synthesis from "./tabs/synthesis.js";
 
 /** The default search options. */
-const defaultSearchOptions: ParserOptions = {
+const defaultSearchOptions = Object.freeze({
 	mode: "lax",
 	excludeCopyrighted: true,
 	flags: DictionaryFlags.None,
-} as const;
+} as const satisfies ParserOptions);
 
+/** The default search options with a pre-filled value for the `word` property. */
+const defaultSearchOptionsWithWord = Object.freeze({
+	...defaultSearchOptions,
+	word: "",
+} as const satisfies SearchOptionsWithWord);
+
+/** Represents the results of a word search using `dexonline-scraper`. */
 export interface Results {
-	synthesis: Synthesis.Lemma[];
-	inflection: Inflection.InflectionTable[];
+	readonly synthesis: Synthesis.DictionaryEntry[];
+	readonly inflection: Inflection.InflectionModel[];
 }
 
 /**
- * Taking a {@link word} and (optionally) a set of {@link ParseOptions}, searches
+ * Taking a {@link word} and (optionally) a set of {@link ParserOptions}, searches
  * for the word on dexonline, returning a {@link Results} object or {@link undefined}
  * if not found.
  *
@@ -53,10 +63,7 @@ export async function get(
  * @param options - Options for searching.
  * @returns A {@link Results} object or {@link undefined} if unable to parse.
  */
-export function parse(
-	contents: string,
-	options: SearchOptionsWithWord<true> = { ...defaultSearchOptions, word: "" },
-): Results {
+export function parse(contents: string, options: SearchOptionsWithWord<true> = defaultSearchOptionsWithWord): Results {
 	const $ = cheerio.load(contents);
 
 	const optionsFilled: SearchOptionsWithWord<false> = {
@@ -64,13 +71,20 @@ export function parse(
 		...options,
 	};
 
-	const synthesis = Synthesis.parse($, optionsFilled);
-	const inflection = Inflection.parse($, optionsFilled);
+	const synthesis = Synthesis.scrape($, optionsFilled);
+	const inflection = Inflection.scrape($, optionsFilled);
 
 	return { synthesis, inflection };
 }
 
-export * from "./tabs/inflection.js";
-export * from "./tabs/synthesis.js";
-export { DictionaryFlags, MatchingModes, Synthesis, Inflection, Links };
+export {
+	DictionaryFlags,
+	MatchingModes,
+	Synthesis,
+	Inflection,
+	Links,
+	Expressions,
+	Selectors,
+	copyrightedDictionaries,
+};
 export type { ParserOptions };

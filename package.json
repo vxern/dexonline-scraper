@@ -1,8 +1,8 @@
 {
 	"name": "dexonline-scraper",
-	"description": "A lightweight Dexonline.ro page scraper to fetch information about words in the Romanian language.",
+	"description": "A tiny, battle-tested, performant and documented scraper for dexonline.ro.",
 	"license": "MIT",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"type": "module",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",

@@ -1,3 +1,13 @@
+## 0.2.0
+
+- Document all API members, export them as well.
+- Use better naming:
+  - Rename "lemma" to "dictionary entry".
+  - Rename "inflection table" to "inflection model".
+    - Rename "header" and "body" to "heading" and "table" for inflection models.
+  - Use "scrape" instead of "parse". 
+- Make returned objects read-only.
+
 ## 0.1.2
 
 - Bumped dependency versions in `package.json`, added an explicit import for `ts-node`.

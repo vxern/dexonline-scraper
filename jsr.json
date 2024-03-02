@@ -1,5 +1,5 @@
 {
   "name": "@vxern/dexonline-scraper",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "exports": "./src/index.ts"
 }

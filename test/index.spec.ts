@@ -341,8 +341,8 @@ describe("The parser", () => {
 			expect(entriesStrict.inflection.every((entry) => entry.lemma === "a")).to.be.true;
 		});
 
-		describe("the dictionary flags:", async () => {
-			const testCedilla = async () => {
+		describe("the dictionary flags:", () => {
+			it("cedilla", async () => {
 				const results = await Dexonline.get("și", { flags: DictionaryFlags.UseCedillas });
 
 				expect(results).to.not.be.undefined;
@@ -353,17 +353,17 @@ describe("The parser", () => {
 				expect(resultsStringified).to.not.include("Ș");
 				expect(resultsStringified).to.not.include("ț");
 				expect(resultsStringified).to.not.include("Ț");
-			};
-
-			const testMatchDiacritics = async () => {
+			});
+      
+			it("match diacritics", async () => {
 				const results = await Dexonline.get("ca", { flags: DictionaryFlags.MatchDiacritics });
 
 				expect(results).to.not.be.undefined;
 
 				expect(results?.synthesis.map((entry) => entry.lemma)).to.not.include("că");
-			};
-
-			const testUsePreReformOrtography = async () => {
+			});
+      
+			it("use pre-reform orthography", async () => {
 				const results = await Dexonline.get("și", { flags: DictionaryFlags.UsePreReformOrthography });
 
 				expect(results).to.not.be.undefined;
@@ -372,18 +372,13 @@ describe("The parser", () => {
 
 				expect(resultsStringified).to.not.include("â");
 				expect(resultsStringified).to.not.include("Â");
-			};
+			});
 
-			const testSearchOnlyNormativeDictionaries = async () => {
+			it("search only normative dictionaries", async () => {
 				const results = await Dexonline.get("bengos", { flags: DictionaryFlags.SearchOnlyNormativeDictionaries });
 
 				expect(results?.synthesis).to.be.empty;
-			};
-
-			it("cedilla", testCedilla);
-			it("match diacritics", testMatchDiacritics);
-			it("use pre-reform orthography", testUsePreReformOrtography);
-			it("search only normative dictionaries", testSearchOnlyNormativeDictionaries);
+			});
 		});
 	});
 });
