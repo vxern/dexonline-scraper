@@ -1,6 +1,8 @@
 ## 0.2.2
 
 - Bumped dependencies to address security risks.
+- Fixed tests that were failing due to updated information on Dexonline.
+- Updated the list of copyrighted sources.
 - Updated the changelog to retire the conventional commit style of messages.
 
 ## 0.2.1
