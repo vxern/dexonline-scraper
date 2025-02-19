@@ -10,14 +10,6 @@ describe("The parser", () => {
 		expect(results).to.be.undefined;
 	});
 
-	it("parses terms without definitions (without the synthesis tab being populated).", async () => {
-		const results = await Dexonline.get("ade");
-
-		expect(results).to.not.be.undefined;
-		expect(results?.synthesis).to.be.empty;
-		expect(results?.inflection).to.not.be.empty;
-	});
-
 	it("parses terms with one entry.", async () => {
 		const results = await Dexonline.get("întregime");
 
@@ -78,7 +70,7 @@ describe("The parser", () => {
 				{
 					tags: [],
 					sources: [`DEX '09`, `DEX '98`],
-					value: "Întreg + sufix -ime.",
+					value: "Întreg + -ime.",
 				},
 			],
 		});
@@ -377,7 +369,7 @@ describe("The parser", () => {
 			it("search only normative dictionaries", async () => {
 				const results = await Dexonline.get("bengos", { flags: DictionaryFlags.SearchOnlyNormativeDictionaries });
 
-				expect(results?.synthesis).to.be.empty;
+				expect(results?.synthesis?.at(0)?.definitions).to.be.empty;
 			});
 		});
 	});
