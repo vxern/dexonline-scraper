@@ -2,7 +2,7 @@
 	"name": "dexonline-scraper",
 	"description": "A tiny, battle-tested, performant and documented scraper for dexonline.ro.",
 	"license": "MIT",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"type": "module",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -42,7 +42,7 @@
     "prepublishOnly": "npm test && npm run build && jsr publish"
 	},
 	"dependencies": {
-		"cheerio": "^1.0.0-rc.12"
+		"cheerio": "1.0.0-rc.12"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.5.3",

@@ -1,17 +1,22 @@
+## 0.2.2
+
+- Bumped dependencies to address security risks.
+- Updated the changelog to retire the conventional commit style of messages.
+
 ## 0.2.1
 
-- Add documentation for the remaining, undocumented API members.
-- Rename `MatchingModes` to `MatchingMode` as a union type.
+- Added documentation for the remaining, undocumented API members.
+- Renamed `MatchingModes` to `MatchingMode` as a union type.
 
 ## 0.2.0
 
-- Document all API members, export them as well.
-- Use better naming:
-  - Rename "lemma" to "dictionary entry".
-  - Rename "inflection table" to "inflection model".
-    - Rename "header" and "body" to "heading" and "table" for inflection models.
-  - Use "scrape" instead of "parse". 
-- Make returned objects read-only.
+- Documented all API members, exported them as well.
+- Used better naming:
+  - Renamed "lemma" to "dictionary entry".
+  - Renamed "inflection table" to "inflection model".
+    - Renamed "header" and "body" to "heading" and "table" for inflection models.
+  - Used "scrape" instead of "parse". 
+- Made returned objects read-only.
 
 ## 0.1.2
 
